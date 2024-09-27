@@ -144,8 +144,8 @@ Feel free to submit issues or pull requests if you would like to contribute to t
 
 ## **Contact**
 For any questions or suggestions, feel free to reach out:
-- **Email**: your-email@example.com
-- **GitHub**: [your-github-username](https://github.com/yourusername)
+- **Email**: jazaltron.jan@gmail.com
+- **GitHub**: [Jazaltron10](https://github.com/Jazaltron10/movie_review_api)
 
 ---
 
