@@ -7,6 +7,7 @@ class Review(models.Model):
     rating = models.IntegerField(choices=[(i, str(i)) for i in range(1,6)])
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     created_date = models.DateTimeField(auto_now_add=True)
+    slug  = models.SlugField(max_length=255)
     
     def __str__(self):
         return f'{self.movie_title} - {self.rating} stars'
