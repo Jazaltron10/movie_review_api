@@ -1,134 +1,176 @@
 # **Movie Review API**
 
+Welcome to the **Movie Review API**, a Django-based REST API that allows users to register, authenticate, and submit reviews for various movies. This project is designed to provide a secure, scalable, and user-friendly platform for managing movie reviews, leveraging Django's robust framework, token authentication, and the Django REST Framework (DRF) for API management.
+
+---
+
+## **Table of Contents**
+1. [Project Overview](#project-overview)
+2. [Features](#features)
+3. [Technologies Used](#technologies-used)
+4. [Project Structure](#project-structure)
+5. [Installation and Setup](#installation-and-setup)
+6. [Authentication](#authentication)
+7. [Endpoints](#endpoints)
+8. [Pagination and Filtering](#pagination-and-filtering)
+9. [Contributing](#contributing)
+10. [License](#license)
+
+---
+
 ## **Project Overview**
-The **Movie Review API** allows users to create, read, update, and delete movie reviews. Users can also view reviews by movie and search/filter reviews by rating. The API is built using Django and Django REST Framework, providing a secure, RESTful API that interacts with a database to store user-generated reviews.
+The **Movie Review API** is designed to allow users to:
+- **Create an account** and **authenticate** using token-based authentication.
+- **Submit reviews** for movies, rate them, and view reviews by others.
+- **Search, filter**, and **paginate** through the list of movies and reviews efficiently.
+
+The project uses a custom **User model**, integrates **Django REST Framework** for API management, and supports **token authentication** for secure access. The API is flexible, making it easy for developers to integrate it into different client applications such as mobile apps, websites, or other frontend systems.
+
+---
 
 ## **Features**
-- **User Authentication**: Users can register, log in, and manage their profiles.
-- **Review Management**: Authenticated users can create, update, and delete reviews.
-- **Movie Reviews**: Users can view reviews for a specific movie.
-- **Search and Filter**: Search for reviews by movie title or filter by rating.
-- **Pagination**: Supports pagination for large datasets of reviews.
+- **User Registration and Authentication**: Users can register and authenticate using tokens.
+- **Movie Management**: Manage a collection of movies with title, genre, and release date.
+- **Review System**: Users can submit reviews and ratings (1 to 5) for movies.
+- **Filtering and Searching**: Find movies and reviews through search queries and filters.
+- **Pagination**: Efficiently paginate through large datasets.
+- **Admin Panel**: Admin users can manage movies, reviews, and user accounts via Django's admin interface.
+- **Secure**: Token-based authentication ensures that only authorized users can perform certain actions (e.g., submit reviews).
+
+---
 
 ## **Technologies Used**
-- **Python 3.x**: Main programming language.
-- **Django**: Web framework for handling backend logic.
-- **Django REST Framework (DRF)**: Framework for building RESTful APIs.
-- **PostgreSQL/SQLite**: Database for storing user and review data.
-- **JWT Authentication (Optional)**: Token-based authentication for securing API endpoints.
-- **Heroku/PythonAnywhere**: For deployment.
+This project leverages the following technologies:
+- **Python 3.12.x**: Programming language for building the backend logic.
+- **Django 5.x**: Web framework for rapid development and clean design.
+- **Django REST Framework**: A powerful toolkit for building Web APIs in Django.
+- **PostgreSQL** (optional): Database used in production environments for data storage.
+- **SQLite**: Default database used for development.
+- **Django-Allauth**: For handling user registration and social authentication.
+- **WhiteNoise**: For static file management in production.
+- **Docker** (optional): Containerization tool to deploy the project easily.
+  
+---
+
+## **Project Structure**
+Here's a quick look at the main folders and files:
+```
+├── movie_review_api/
+│   ├── settings.py              # Main Django settings file
+│   ├── urls.py                  # Project-level URL configuration
+│   ├── wsgi.py                  # WSGI configuration for production
+├── reviews/
+│   ├── models.py                # Models for Movie and Review
+│   ├── views.py                 # API views for handling movie and review requests
+│   ├── serializers.py           # DRF serializers for data validation
+│   ├── urls.py                  # URL routing for movie and review endpoints
+├── users/
+│   ├── models.py                # Custom User model and Profile
+│   ├── admin.py                 # Custom admin registration for User and Profile
+│   ├── serializers.py           # User serializers for DRF
+│   ├── views.py                 # API views for handling user requests
+├── manage.py                    # Django's management script
+└── README.md                    # Project documentation
+```
 
 ---
 
-## **API Endpoints**
+## **Installation and Setup**
 
-### **Authentication**
-- **POST** `/api/auth/register/` - Register a new user.
-- **POST** `/api/auth/login/` - Log in a user and get a token (if using JWT).
-- **POST** `/api/auth/logout/` - Log out a user (if using JWT).
-
-### **Reviews**
-- **GET** `/api/reviews/` - List all reviews (supports filtering and pagination).
-- **POST** `/api/reviews/` - Create a new review (authenticated users only).
-- **GET** `/api/reviews/<review_id>/` - Retrieve details for a specific review.
-- **PUT/PATCH** `/api/reviews/<review_id>/` - Update a review (authenticated users only).
-- **DELETE** `/api/reviews/<review_id>/` - Delete a review (authenticated users only).
-
-### **Movies**
-- **GET** `/api/movies/<movie_title>/reviews/` - List all reviews for a specific movie (with sorting and pagination).
-
-### **Filtering & Searching**
-- **GET** `/api/reviews/?movie_title=<title>` - Search reviews by movie title.
-- **GET** `/api/reviews/?rating=<value>` - Filter reviews by rating (e.g., 4-star reviews).
-
----
-
-## **Installation**
-
-### **1. Clone the Repository**
+### **1. Clone the repository:**
 ```bash
 git clone https://github.com/yourusername/movie-review-api.git
 cd movie-review-api
 ```
 
-### **2. Set Up a Virtual Environment**
+### **2. Create a virtual environment and activate it:**
 ```bash
-python3 -m venv venv
-source venv/bin/activate    # On Windows, use venv\Scripts\activate
+python3 -m venv env
+source env/bin/activate  # On Windows, use `env\Scripts\activate`
 ```
 
-### **3. Install Dependencies**
+### **3. Install the project dependencies:**
 ```bash
 pip install -r requirements.txt
 ```
 
-### **4. Set Up Environment Variables**
-Create a `.env` file in the root directory and add the following:
-
+### **4. Set up environment variables:**
+You will need to create a `.env` file in the root of your project to store secret keys and database credentials:
 ```bash
-SECRET_KEY=your_django_secret_key
-DEBUG=True  # For development
-DATABASE_URL=your_database_url  # Use SQLite for local dev or PostgreSQL for production
+SECRET_KEY=your-secret-key
+DB_NAME=your-database-name
+DB_USER=your-database-user
+DB_PASSWORD=your-database-password
+DB_HOST=localhost
+DB_PORT=5432
 ```
 
-### **5. Apply Migrations**
+### **5. Set up the database:**
+If using PostgreSQL, ensure the database is running, then run the following commands to apply the migrations:
 ```bash
 python manage.py migrate
 ```
 
-### **6. Create a Superuser (Optional)**
+### **6. Create a superuser (admin account):**
 ```bash
 python manage.py createsuperuser
 ```
 
-### **7. Run the Development Server**
+### **7. Run the development server:**
 ```bash
 python manage.py runserver
 ```
 
-The API will be accessible at `http://127.0.0.1:8000/`.
+Now, you can access the API at `http://127.0.0.1:8000/`.
 
 ---
 
-## **Running Tests**
-To run the tests for the API, use the following command:
+## **Authentication**
+This project uses **Token Authentication** provided by Django REST Framework. After registration, users can obtain their authentication token by logging in through the `/dj-rest-auth/login/` endpoint. Once the token is obtained, it should be included in the Authorization header of all requests.
 
-```bash
-python manage.py test
+Example of how to include the token in your request header:
+```http
+Authorization: Token <your-token-here>
 ```
 
 ---
 
-## **Deployment**
-### **Deploy to Heroku**
-1. **Install Heroku CLI**: If you haven't installed it yet, follow [this guide](https://devcenter.heroku.com/articles/heroku-cli).
-2. **Create a Heroku App**:
-   ```bash
-   heroku create your-app-name
-   ```
-3. **Set up environment variables** on Heroku:
-   ```bash
-   heroku config:set SECRET_KEY=your_django_secret_key
-   heroku config:set DEBUG=False
-   ```
-4. **Push code to Heroku**:
-   ```bash
-   git push heroku main
-   ```
+## **Endpoints**
+Below are the key endpoints in the API:
 
-For more detailed instructions, refer to the [Heroku Deployment Guide](https://devcenter.heroku.com/articles/deploying-python).
+### **User Endpoints**:
+- **POST** `/dj-rest-auth/registration/` – Register a new user
+- **POST** `/dj-rest-auth/login/` – Log in and get a token
+- **POST** `/dj-rest-auth/logout/` – Log out the user
 
----
+### **Movie Endpoints**:
+- **GET** `/api/movies/` – Retrieve the list of movies
+- **GET** `/api/movies/{id}/` – Get details of a specific movie
+- **POST** `/api/movies/` – Add a new movie (admin only)
 
-## **Project Report**
-Refer to the project report [here](link-to-your-google-doc).
+### **Review Endpoints**:
+- **GET** `/api/reviews/` – Retrieve the list of reviews
+- **POST** `/api/reviews/` – Submit a new review (authenticated users)
+- **GET** `/api/reviews/{id}/` – Retrieve a specific review
 
 ---
 
-## **Future Enhancements**
-- **Third-party API Integration**: Fetch movie details from OMDB or TMDB.
-- **User Likes**: Implement a feature where users can "like" reviews.
-- **Review Comments**: Allow users to comment on each other's reviews.
+## **Pagination and Filtering**
+The API supports **pagination**, **filtering**, and **searching** to efficiently handle large sets of data. Pagination is enabled by default and can be controlled via query parameters.
+
+- **Pagination**: `http://127.0.0.1:8000/api/movies/?limit=5&offset=10`
+- **Filtering**: Filter movies by title: `http://127.0.0.1:8000/api/movies/?title=Inception`
+- **Search**: Search reviews by rating: `http://127.0.0.1:8000/api/reviews/?search=5`
+
+---
+
+## **Contributing**
+Contributions to this project are welcome! Please follow the steps below:
+1. Fork the repository.
+2. Create a new branch (`git checkout -b feature-branch`).
+3. Make your changes and commit (`git commit -am 'Add new feature'`).
+4. Push to the branch (`git push origin feature-branch`).
+5. Create a new Pull Request.
 
 ---
 
@@ -137,16 +179,7 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ---
 
-## **Contributing**
-Feel free to submit issues or pull requests if you would like to contribute to this project. For major changes, please open an issue first to discuss what you would like to change.
-
----
-
 ## **Contact**
-For any questions or suggestions, feel free to reach out:
-- **Email**: jazaltron.jan@gmail.com
-- **GitHub**: [Jazaltron10](https://github.com/Jazaltron10/movie_review_api)
+If you have any questions or suggestions regarding the project, feel free to reach out via email at `jazaltron.jan@gmail.com`.
 
 ---
-
-This `README.md` file gives a comprehensive overview of your **Movie Review API** project, providing clear instructions and details on how to use the API, set it up, and contribute.
